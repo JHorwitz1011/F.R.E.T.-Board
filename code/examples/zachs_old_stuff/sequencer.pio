@@ -1,0 +1,127 @@
+// PIO state machines for intermodule communication (IMC)
+// NOTE: the TX and RX programs MUST be run on separate
+// state machines since each requires an 8-word deep FIFO
+
+    
+; Sequencer RX
+    // NOTE: the clock is assumed to be GPIO pin 18. If
+    // not then the number on the wait instructions below
+    // will need to be adjusted
+.program seq_rx
+
+.wrap_target
+idle:
+    jmp PIN idle            ; Wait for data ready signal (most likely not needed)
+    wait 0 GPIO 18          ; Capture rising edge of clock
+    wait 1 GPIO 18
+    in PINS, 1              ; Shift in the next bit (uses autopush for words)
+.wrap
+
+
+% c-sdk {
+#include "hardware/clocks.h"
+#include "hardware/gpio.h"
+static inline void seq_rx_init(PIO pio, uint sm, uint offset, uint clk_pin, uint rx_pin, uint drdy_pin)
+{
+
+    // Config "object"
+    pio_sm_config cfg = seq_rx_program_get_default_config(offset);
+
+    // Config input pins
+    sm_config_set_in_pins(&cfg, rx_pin);
+    sm_config_set_jmp_pin(&cfg, drdy_pin);
+    // sm_config_set_in_pins(&cfg, clk_pin); 
+
+    // Set input pins as inputs
+   pio_sm_set_pindirs_with_mask(
+       pio,
+       sm,
+       0, // All inputs
+       (1u << rx_pin)
+   //| (1u << clk_pin) | (1u << drdy_pin) // Don't set clk and drdy since they need to also be outputs
+     );
+
+    // More IO init
+    pio_gpio_init(pio, rx_pin);
+    // pio_gpio_init(pio, drdy_pin);
+    // pio_gpio_init(pio, clk_pin);
+    
+    // Output shift register
+    // BOOL right_shift, BOOL auto_push, 1..32 push_threshold
+    sm_config_set_in_shift(&cfg, true, true, 32);
+
+    // Join TX and RX fifos to give us 8 words of depth
+    sm_config_set_fifo_join(&cfg, PIO_FIFO_JOIN_RX);
+
+    pio_sm_init(pio, sm, offset, &cfg);
+
+    // Start state machine
+    pio_sm_set_enabled(pio, sm, true);
+}
+%}
+
+    
+; Sequencer TX
+.program seq_tx
+    
+    ; External code must control the DRDY pin
+.wrap_target
+    irq WAIT 0           [15] ; The controllng program will clear IRQ flag 0 to start the send
+    set PINS, 0               ; Set clock low
+    pull ifempty block        ; Get value to send and put it in the OSR
+shift_loop:
+    set PINS, 0               ; Set clock low
+    out PINS, 1          [31] ; Shift 1 bit
+    set PINS, 1          [15] ; Set clock high
+    jmp !OSRE shift_loop [15] ; Keep shifting until OSR is empty
+    irq SET 1                 ; Indicate that the SM is done with the word
+.wrap
+
+
+% c-sdk {
+#include "hardware/clocks.h"
+#include "hardware/gpio.h"
+static inline void seq_tx_init(PIO pio, uint sm, uint offset, uint clk_pin, uint tx_pin)
+{
+
+    // Config "object"
+    pio_sm_config cfg = seq_tx_program_get_default_config(offset);
+
+    // Config output pins
+    sm_config_set_set_pins(&cfg, clk_pin, 1); // One pin
+    sm_config_set_out_pins(&cfg, tx_pin, 1); // One pin
+
+    // Set outputs to 0 initially
+    pio_sm_set_pins_with_mask(pio, sm, 0, (1u << tx_pin) | (1u << clk_pin));
+
+    // Set output pins as outputs
+    pio_sm_set_pindirs_with_mask(
+        pio,
+        sm,
+        (1u << tx_pin) | (1u << clk_pin),
+        (1u << tx_pin) | (1u << clk_pin)
+      );
+
+    // More IO init
+    pio_gpio_init(pio, tx_pin);
+    pio_gpio_init(pio, clk_pin);
+    
+    // Configure PIO clock rate
+    // float clk_div = (float) clock_get_hz(clk_sys) / frequency * 1000;
+    // sm_config_set_clkdiv(&cfg, clk_div);
+
+    // Output shift register
+    // BOOL right_shift, BOOL auto_push, 1..32 push_threshold
+    sm_config_set_out_shift(&cfg, true, false, 32);
+
+    // Join TX and RX fifos to give us 8 words of depth
+    sm_config_set_fifo_join(&cfg, PIO_FIFO_JOIN_TX);
+
+    pio_sm_init(pio, sm, offset, &cfg);
+
+    // Start state machine
+    pio_sm_set_enabled(pio, sm, true);
+}
+%}
+
+    
