@@ -1,0 +1,5 @@
+add_subdirectory(hello_world_ad7685)
+add_subdirectory(hello_world_serial)
+# add_subdirectory(hello_world_ads7830)
+add_subdirectory(hello_world_dac8411)
+add_subdirectory(adc_to_dac)
