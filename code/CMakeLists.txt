@@ -19,13 +19,8 @@ set(PICO_EXAMPLES_PATH ${PROJECT_SOURCE_DIR})
 # Initialize the SDK
 pico_sdk_init()
 
-
-
-# Add blink example
 add_subdirectory(examples)
-
-# Add hello world example
-# add_subdirectory(release)
+add_subdirectory(release)
 
 add_compile_options(-Wall
         -Wno-format          # int != int32_t as far as the compiler is concerned because gcc has int32_t as long int
