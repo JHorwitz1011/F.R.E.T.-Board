@@ -7,13 +7,8 @@
 
 void lows(s7x16* x, s7x16* y, Coeff* coeffs){
     y[0] = muls7x16((x[0] + 2 * x[1] + x[2]), l_b[0]);
-    x[2] = x[1];
-    x[1] = x[0];
     y[0] = y[0] - muls7x16(y[2], l_a[2]);
-    y[2] = y[1];
-    y[0] = y[0] - muls7x16(y[1], la_[1]);
-    y[1] = y[0];
-    return y;
+    y[0] = y[0] - muls7x16(y[1], l_a[1]);
 } 
 
 //======================================================== 
@@ -24,13 +19,8 @@ void lows(s7x16* x, s7x16* y, Coeff* coeffs){
 void mid1s(s7x16* x, s7x16* y, Coeff* coeffs)
 {
 	y[0] = muls7x16((x[0] - x[2]), m1_b[0]);
-	x[2] = x[1];
-	x[1] = x[0];
 	y[0] = y[0] - muls7x16(y[2], m1_a[2]);
-	y[2] = y[1];
 	y[0] = y[0] - muls7x16(y[1], m1_a[1]);
-    y[1] = y[0];
-    return y;
 } 
 
 //======================================================== 
@@ -41,13 +31,8 @@ void mid1s(s7x16* x, s7x16* y, Coeff* coeffs)
 void mid2s(s7x16* x, s7x16* y, Coeff* coeffs)
 {
     y[0] = muls7x16((x[0] - x[2]), m2_b[0]);
-    x[2] = x[1];
-    x[1] = x[0];
     y[0] = y[0] - muls7x16(y[2], m2_a[2]);
-    y[2] = y[1];
     y[0] = y[0] - muls7x16(y[1], m2_a[1]);
-    y[1] = y[0];
-    return y;
 }
 
 //======================================================== 
@@ -57,13 +42,8 @@ void mid2s(s7x16* x, s7x16* y, Coeff* coeffs)
 
 void mid3s(s7x16* x, s7x16* y, Coeff* coeffs) {
     y[0] = muls7x16((x[0] - x[2]), m3_b[0]);
-    x[2] = x[1];
-    x[1] = x[0];
     y[0] = y[0] - muls7x16(y[2], m3_a[2]);
-    y[2] = y[1];
     y[0] = y[0] - muls7x16(y[1], m3_a[1]);
-    y[1] = y[0];
-    return y;
 }
 
 //======================================================== 
@@ -73,13 +53,8 @@ void mid3s(s7x16* x, s7x16* y, Coeff* coeffs) {
 
 void highs(s7x16* x, s7x16* y, Coeff* coeffs) {
     y[0] = muls7x16((x[0] + 2*x[1] + x[2]), h_b[0]);
-    x[2] = x[1];
-    x[1] = x[0];
     y[0] = y[0] - muls7x16(y[2], h_a[2]);
-    y[2] = y[1];
     y[0] = y[0] - muls7x16(y[1], ha_[1]);
-    y[1] = y[0];
-    return y[0];
 }
 
 void fillCoefficients(Coeff* coeff) {
@@ -125,5 +100,13 @@ void fillCoefficients(Coeff* coeff) {
 }
 
 void filter(s7x16* x, s7x16* y, Coeff* coeffs, Gains gains) {
+    //bump output
+    y[2] = y[1];
+    y[1] = y[0];
+    y[0] = 0;
 
+    //filter 
+    lows(x,y, coeffs);
+
+    //ignore gains for now
 }
