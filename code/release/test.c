@@ -11,6 +11,10 @@ int main() {
 
     // Ports
     spi_inst_t *spi = spi0;
+    i2c_inst_t *i2c = i2c0;
+
+    i2c_init(i2c, 400 * 1000);
+
 
     // Initialize chosen serial port
     stdio_init_all();
