@@ -47,12 +47,15 @@ void highs(s7x16* x, s7x16* y, Coeff* coeffs);
 /***
  * 
  ***/
-void fillCoefficients(Coeff* coeff);
+Coeff* initCoefficients();
+void deinitCoefficients(Coeff* coeffs);
 
+Gains* initGains();
+void deinitGains(Gains* gains);
 /***
  * Uses the input buffer to filter and construct the output buffer
  * It is assumed that x is updated with current values.
  * First, pop the output buffer leaving y[0] empty
  * Passes the x and y buffer y through all five filters and sums them to be constructs y[0]
  ***/
-void filter(s7x16* x, s7x16* y, Coeff* coeffs, Gains gains);
+void filter(s7x16* x, s7x16* y, Coeff* coeffs, Gains* gains);

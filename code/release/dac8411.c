@@ -1,5 +1,14 @@
-#include "dac8411.h"
+//c libraries
+#include <stdio.h>
+#include <math.h>
 
+//pico libraries
+#include "pico/stdlib.h"
+#include "hardware/spi.h"
+
+//project files
+#include "dac8411.h"
+#include "pins.h"
 
 // Write 1 byte to the specified register
 void dac8411_write( spi_inst_t *spi, 

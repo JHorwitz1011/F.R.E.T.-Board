@@ -1,14 +1,17 @@
 #include "filters.h"
 
+#include <string.h>
+#include <stdlib.h>
+
 //======================================================== 
 // Second order Butterworth lowpass
 // x is the input signal
 // y is the output signal
 
 void lows(s7x16* x, s7x16* y, Coeff* coeffs){
-    y[0] = muls7x16((x[0] + 2 * x[1] + x[2]), l_b[0]);
-    y[0] = y[0] - muls7x16(y[2], l_a[2]);
-    y[0] = y[0] - muls7x16(y[1], l_a[1]);
+    y[0] = muls7x16((x[0] + 2 * x[1] + x[2]), coeffs->l_b[0]);
+    y[0] = y[0] - muls7x16(y[2], coeffs->l_a[2]);
+    y[0] = y[0] - muls7x16(y[1], coeffs->l_a[1]);
 } 
 
 //======================================================== 
@@ -18,9 +21,9 @@ void lows(s7x16* x, s7x16* y, Coeff* coeffs){
 
 void mid1s(s7x16* x, s7x16* y, Coeff* coeffs)
 {
-	y[0] = muls7x16((x[0] - x[2]), m1_b[0]);
-	y[0] = y[0] - muls7x16(y[2], m1_a[2]);
-	y[0] = y[0] - muls7x16(y[1], m1_a[1]);
+	y[0] = muls7x16((x[0] - x[2]), coeffs->m1_b[0]);
+	y[0] = y[0] - muls7x16(y[2], coeffs->m1_a[2]);
+	y[0] = y[0] - muls7x16(y[1], coeffs->m1_a[1]);
 } 
 
 //======================================================== 
@@ -30,9 +33,9 @@ void mid1s(s7x16* x, s7x16* y, Coeff* coeffs)
 
 void mid2s(s7x16* x, s7x16* y, Coeff* coeffs)
 {
-    y[0] = muls7x16((x[0] - x[2]), m2_b[0]);
-    y[0] = y[0] - muls7x16(y[2], m2_a[2]);
-    y[0] = y[0] - muls7x16(y[1], m2_a[1]);
+    y[0] = muls7x16((x[0] - x[2]), coeffs->m2_b[0]);
+    y[0] = y[0] - muls7x16(y[2], coeffs->m2_a[2]);
+    y[0] = y[0] - muls7x16(y[1], coeffs->m2_a[1]);
 }
 
 //======================================================== 
@@ -41,9 +44,9 @@ void mid2s(s7x16* x, s7x16* y, Coeff* coeffs)
 // y is the output signal
 
 void mid3s(s7x16* x, s7x16* y, Coeff* coeffs) {
-    y[0] = muls7x16((x[0] - x[2]), m3_b[0]);
-    y[0] = y[0] - muls7x16(y[2], m3_a[2]);
-    y[0] = y[0] - muls7x16(y[1], m3_a[1]);
+    y[0] = muls7x16((x[0] - x[2]), coeffs->m3_b[0]);
+    y[0] = y[0] - muls7x16(y[2], coeffs->m3_a[2]);
+    y[0] = y[0] - muls7x16(y[1], coeffs->m3_a[1]);
 }
 
 //======================================================== 
@@ -52,12 +55,15 @@ void mid3s(s7x16* x, s7x16* y, Coeff* coeffs) {
 // y is the output signal
 
 void highs(s7x16* x, s7x16* y, Coeff* coeffs) {
-    y[0] = muls7x16((x[0] + 2*x[1] + x[2]), h_b[0]);
-    y[0] = y[0] - muls7x16(y[2], h_a[2]);
-    y[0] = y[0] - muls7x16(y[1], ha_[1]);
+    y[0] = muls7x16((x[0] + 2*x[1] + x[2]), coeffs->h_b[0]);
+    y[0] = y[0] - muls7x16(y[2], coeffs->h_a[2]);
+    y[0] = y[0] - muls7x16(y[1], coeffs->h_a[1]);
 }
 
-void fillCoefficients(Coeff* coeff) {
+Coeff* initCoefficients() {
+    Coeff* coeff = malloc(sizeof(Coeff));
+    memset(coeff, 0x00, sizeof(Coeff));
+
     //high b = [0.7333   -1.4666]
     coeff->h_b[0] = float_to_s7x16(0.7333);
 
@@ -97,9 +103,32 @@ void fillCoefficients(Coeff* coeff) {
     coeff->l_a[0] = float_to_s7x16(1.00);
     coeff->l_a[1] = float_to_s7x16(-1.9752);
     coeff->l_a[2] = float_to_s7x16(0.9755);
+
+    return coeff;
 }
 
-void filter(s7x16* x, s7x16* y, Coeff* coeffs, Gains gains) {
+void deinitCoefficients(Coeff* coeff) {
+    free(coeff);
+}
+
+Gains* initGains() {
+    Gains* gains = malloc(sizeof(Gains));
+    memset(gains, 0x00, sizeof(Gains));
+    
+    gains->h = 1;
+    gains->m1 = 1;
+    gains->m2 = 1;
+    gains->m3 = 1;
+    gains->l = 1;
+
+    return gains;
+}
+
+void deinitGains(Gains* gains) {
+    free(gains);
+}
+
+void filter(s7x16* x, s7x16* y, Coeff* coeffs, Gains* gains) {
     //bump output
     y[2] = y[1];
     y[1] = y[0];

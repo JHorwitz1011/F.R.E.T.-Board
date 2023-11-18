@@ -1,15 +1,22 @@
+#include <stdio.h>
+#include <math.h>
+
+#include "pico/stdlib.h"
+#include "pins.h"
 #include "ad7685.h"
-#include "filters.h"
 
 s7x16 ad7685_read(spi_inst_t *spi) {
+    uint8_t dst[2] = {0,0};
     gpio_put(CS_AD7685, 1);
     spi_read_blocking(spi, 0x00, dst, AD7685_BYTES_PER_TRANSFER);
+
+    //flip byte order
     uint8_t temp = dst[0];
     dst[0] = dst[1];
     dst[1] = temp;
     gpio_put(CS_AD7685, 0);
-    s7x16 love = (temp + 0x8000);
-    return love;
+
+    return (s7x16)(temp + 0x8000);
 }
 
 void ad7685_init(spi_inst_t* spi) {

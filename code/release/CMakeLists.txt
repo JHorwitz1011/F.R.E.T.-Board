@@ -1,9 +1,13 @@
 add_executable( test
-                test.c filters.c
+                test.c
+                #peripherals
+                ad7685.c dac8411.c
+                #filtering
+                filters.c
         )
 
 # pull in common dependencies
-target_link_libraries(test pico_stdlib)
+target_link_libraries(test pico_stdlib hardware_spi)
 
 # create map/bin/hex/uf2 file etc.
 pico_add_extra_outputs(test)
