@@ -7,7 +7,7 @@ add_executable( test
         )
 
 # pull in common dependencies
-target_link_libraries(test pico_stdlib hardware_spi)
+target_link_libraries(test pico_stdlib hardware_spi hardware_i2c)
 
 # create map/bin/hex/uf2 file etc.
 pico_add_extra_outputs(test)

@@ -6,17 +6,19 @@
 #include "ad7685.h"
 
 s7x16 ad7685_read(spi_inst_t *spi) {
-    uint8_t dst[2] = {0,0};
+    uint16_t dst = 0;
+    uint8_t* dst_as_array = (uint8_t*)(&dst);
     gpio_put(CS_AD7685, 1);
-    spi_read_blocking(spi, 0x00, dst, AD7685_BYTES_PER_TRANSFER);
-
+    sleep_us(4);
+    spi_read_blocking(spi, 0x00, dst_as_array, AD7685_BYTES_PER_TRANSFER);
+    
     //flip byte order
-    uint8_t temp = dst[0];
-    dst[0] = dst[1];
-    dst[1] = temp;
+    uint8_t temp = dst_as_array[0];
+    dst_as_array[0] = dst_as_array[1]; 
+    dst_as_array[1] = temp;
     gpio_put(CS_AD7685, 0);
 
-    return (s7x16)(temp + 0x8000);
+    return (s7x16)(dst + 0x8000);
 }
 
 void ad7685_init(spi_inst_t* spi) {

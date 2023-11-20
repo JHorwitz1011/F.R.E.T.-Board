@@ -135,7 +135,12 @@ void filter(s7x16* x, s7x16* y, Coeff* coeffs, Gains* gains) {
     y[0] = 0;
 
     //filter 
-    lows(x,y, coeffs);
+    lows(x,y, coeffs);  
+    // y[0] = muls7x16(y[0], float_to_s7x16(1));
+    // mid1s(x,y, coeffs);
+    // mid2s(x,y, coeffs);
+    // mid3s(x,y, coeffs);
+    // highs(x,y, coeffs);
 
     //ignore gains for now
 }
