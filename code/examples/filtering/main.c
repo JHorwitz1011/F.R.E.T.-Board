@@ -5,6 +5,20 @@
 
 #define BUFFER_LEN 10000
 
+void printFixedBinary(sfint32_t input) {
+    sfint32_t copy = input;
+    for(int i = 0; i < sizeof(sfint32_t); i++) {
+        printf("%d", (input && (0x01 << i)) >> i );
+    }
+}
+
+void printIntBinary(int input) {
+    int copy = input;
+    for(int i = 0; i < sizeof(int); i++) {
+        printf("%d", (input && (0x01 << i)) >> i );
+    }
+}
+
 float minFloat(float* buffer, int n) {
     float min = 2;
     for(int i = 0; i < n; i++) {
@@ -14,8 +28,8 @@ float minFloat(float* buffer, int n) {
     return min;
 }
 
-s7x16 minFixed(s7x16* buffer, int n) {
-    s7x16 min = 65535;
+sfint32_t minFixed(sfint32_t* buffer, int n) {
+    sfint32_t min = 65535;
     for(int i = 0; i < n; i++) {
         if(buffer[i] < min)
             min = buffer[i];
@@ -32,8 +46,8 @@ float maxFloat(float* buffer, int n) {
     return max;
 }
 
-s7x16 maxFixed(s7x16* buffer, int n) {
-    s7x16 max = 0;
+sfint32_t maxFixed(sfint32_t* buffer, int n) {
+    sfint32_t max = 0;
     for(int i = 0; i < n; i++) {
         if(buffer[i] > max)
             max = buffer[i];
@@ -49,11 +63,11 @@ void averageFloat(float* buffer, int n) {
     }
 }
 
-void averageFixed(s7x16* buffer, int n) {
+void averageFixed(sfint32_t* buffer, int n) {
     
 }
 
-void dumpBuffer(int freq, float* wave, s7x16 castedWave, s7x16 filteredWave, int n) {
+void dumpBuffer(int freq, float* wave, sfint32_t castedWave, sfint32_t filteredWave, int n) {
         printf("For frequency %f\n 
                 The original wave has average %f min %f and max %f\n 
                 The casted wave has average %f min %f and max %f\n 
@@ -67,18 +81,20 @@ void dumpBuffer(int freq, float* wave, s7x16 castedWave, s7x16 filteredWave, int
 void main() {
 
 
-    //cos buffer
-    float time[BUFFER_LEN];
-    float wave[BUFFER_LEN]; 
-    s7x16 castedWave[BUFFER_LEN];
-    s7x16 filteredWave[BUFFER_LEN];
+    // //cos buffer
+    // float time[BUFFER_LEN];
+    // float wave[BUFFER_LEN]; 
+    // sfint32_t castedWave[BUFFER_LEN];
+    // sfint32_t filteredWave[BUFFER_LEN];
 
-    for(int i = 0; i < BUFFER_LEN; i++) {
-        time[i] = ((float)i)*.0001;
-    }
+    // for(int i = 0; i < BUFFER_LEN; i++) {
+    //     time[i] = ((float)i)*.0001;
+    // }
 
-    for(int freq = 1; freq < 10000; freq+= 100) { //hz
+    // for(int freq = 1; freq < 10000; freq+= 100) { //hz
         
-    }
+    // }
     
+    
+
 }
