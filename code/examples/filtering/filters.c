@@ -9,9 +9,9 @@
 // y is the output signal
 
 void lows(sfint* x, sfint* y, Coeff* coeffs){
-    y[0] = mulsfint((x[0] + 2 * x[1] + x[2]), coeffs->l_b[0]);
-    y[0] = y[0] - mulsfint(y[2], coeffs->l_a[2]);
-    y[0] = y[0] - mulsfint(y[1], coeffs->l_a[1]);
+    y[0] = mul_sfint((x[0] + 2 * x[1] + x[2]), coeffs->l_b[0]);
+    y[0] = y[0] - mul_sfint(y[2], coeffs->l_a[2]);
+    y[0] = y[0] - mul_sfint(y[1], coeffs->l_a[1]);
 } 
 
 //======================================================== 
@@ -19,11 +19,10 @@ void lows(sfint* x, sfint* y, Coeff* coeffs){
 // x is the input signal
 // y is the output signal
 
-void mid1s(sfint* x, sfint* y, Coeff* coeffs)
-{
-	y[0] = mulsfint((x[0] - x[2]), coeffs->m1_b[0]);
-	y[0] = y[0] - mulsfint(y[2], coeffs->m1_a[2]);
-	y[0] = y[0] - mulsfint(y[1], coeffs->m1_a[1]);
+void mid1s(sfint* x, sfint* y, Coeff* coeffs) {
+	y[0] = mul_sfint((x[0] - x[2]), coeffs->m1_b[0]);
+	y[0] = y[0] - mul_sfint(y[2], coeffs->m1_a[2]);
+	y[0] = y[0] - mul_sfint(y[1], coeffs->m1_a[1]);
 } 
 
 //======================================================== 
@@ -33,9 +32,9 @@ void mid1s(sfint* x, sfint* y, Coeff* coeffs)
 
 void mid2s(sfint* x, sfint* y, Coeff* coeffs)
 {
-    y[0] = mulsfint((x[0] - x[2]), coeffs->m2_b[0]);
-    y[0] = y[0] - mulsfint(y[2], coeffs->m2_a[2]);
-    y[0] = y[0] - mulsfint(y[1], coeffs->m2_a[1]);
+    y[0] = mul_sfint((x[0] - x[2]), coeffs->m2_b[0]);
+    y[0] = y[0] - mul_sfint(y[2], coeffs->m2_a[2]);
+    y[0] = y[0] - mul_sfint(y[1], coeffs->m2_a[1]);
 }
 
 //======================================================== 
@@ -44,9 +43,9 @@ void mid2s(sfint* x, sfint* y, Coeff* coeffs)
 // y is the output signal
 
 void mid3s(sfint* x, sfint* y, Coeff* coeffs) {
-    y[0] = mulsfint((x[0] - x[2]), coeffs->m3_b[0]);
-    y[0] = y[0] - mulsfint(y[2], coeffs->m3_a[2]);
-    y[0] = y[0] - mulsfint(y[1], coeffs->m3_a[1]);
+    y[0] = mul_sfint((x[0] - x[2]), coeffs->m3_b[0]);
+    y[0] = y[0] - mul_sfint(y[2], coeffs->m3_a[2]);
+    y[0] = y[0] - mul_sfint(y[1], coeffs->m3_a[1]);
 }
 
 //======================================================== 
@@ -55,9 +54,9 @@ void mid3s(sfint* x, sfint* y, Coeff* coeffs) {
 // y is the output signal
 
 void highs(sfint* x, sfint* y, Coeff* coeffs) {
-    y[0] = mulsfint((x[0] + 2*x[1] + x[2]), coeffs->h_b[0]);
-    y[0] = y[0] - mulsfint(y[2], coeffs->h_a[2]);
-    y[0] = y[0] - mulsfint(y[1], coeffs->h_a[1]);
+    y[0] = mul_sfint((x[0] + 2*x[1] + x[2]), coeffs->h_b[0]);
+    y[0] = y[0] - mul_sfint(y[2], coeffs->h_a[2]);
+    y[0] = y[0] - mul_sfint(y[1], coeffs->h_a[1]);
 }
 
 Coeff* initCoefficients() {
@@ -136,7 +135,7 @@ void filter(sfint* x, sfint* y, Coeff* coeffs, Gains* gains) {
 
     //filter 
     lows(x,y, coeffs);  
-    // y[0] = mulsfint(y[0], float_to_sfint(1));
+    // y[0] = mul_sfint(y[0], float_to_sfint(1));
     // mid1s(x,y, coeffs);
     // mid2s(x,y, coeffs);
     // mid3s(x,y, coeffs);

@@ -1,15 +1,32 @@
 #pragma once
+#include <stdint.h>
 
 typedef signed int sfint;
 
-#define mulsfint(a,b) ((sfint)(((( signed long long )(a))*(( signed long long )(b)))>>16)) //multiply two fixed 16:16
-#define float_to_sfint(a) ((sfint)((a)*65536.0)) // 2^16
-#define sfint_to_float(a) ((float)(a)/65536.0)
+//add/sub works as expected
+#define mul_sfint(a,b) ((sfint)(((( signed long long )(a))*(( signed long long )(b)))>>15)) //multiply two fixed 16:16
+// #define divsfint(a,b) ((sfint)((((signed long long)(a)<<15)/(b)))) 
+// #define abssfint(a) abs(a)
+
+
+#define float_to_sfint(a) (sfint)(a * 65536.0) // 2^15
+#define sfint_to_float(a) (((float)(a)) / 65536.0)
+
+// #define int2fix(a) (((fix))((a) << 15))
+// #define fix2int(a) ((int))((a >> 15))
 #define sfint_to_int(a)    ((int)((a)>>16))
 #define int_to_sfint(a)    ((sfint)((a)<<16))
-#define divsfint(a,b) ((sfint)((((signed long long)(a)<<16)/(b)))) 
-#define abssfint(a) abs(a)
 
+#define MIDPOINT 0x80000000 //65535/2
+#define sfint_to_uint16(a) ((uint16_t)((a+MIDPOINT) >> 16))
+#define uint16_to_sfint(a) ((sfint)((a<<16) + MIDPOINT))
+
+// uint16_t sfint_to_uint16_fn(sfint a) {
+//     a = ((a >> 15) + MIDPOINT);
+//     a += MIDPOINT;
+//     a =
+//     return (uint16_t)(aa >> 15);
+// }
 
 typedef struct Coeff{
     //high pass diff equation coefficients

@@ -14,7 +14,6 @@ void dumpBuffer(int freq, float* wave, sfint castedWave, sfint filteredWave, int
 
 void main() {
 
-
     // //cos buffer
     // float time[BUFFER_LEN];
     // float wave[BUFFER_LEN]; 
