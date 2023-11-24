@@ -23,7 +23,7 @@ void dac8411_write( spi_inst_t *spi,
     // uint8_t b3 = (pkt & 0x0000FF) << 16;
     // pkt = (0x00FF00 & pkt) | b1 | b3; 
 
-    uint32_t pkt = (pwr << 6) | (cnv_data >> 10) | ((cnv_data  & 0b0000001111111100 ) << 6) | (0b11 << 22);
+    uint32_t pkt = (pwr << 6) | (cnv_data >> 10) | ((cnv_data  & 0b0000001111111100 ) << 6) | ((cnv_data & 0b11) << 22);
 
     //send over spi
     gpio_put(CS_DAC8411, 0);
