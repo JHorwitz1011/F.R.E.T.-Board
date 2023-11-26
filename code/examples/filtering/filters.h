@@ -4,7 +4,7 @@
 typedef signed int sfint;
 
 //add/sub works as expected
-#define mul_sfint(a,b) ((sfint)(((( signed long long )(a))*(( signed long long )(b)))>>15)) //multiply two fixed 16:16
+#define mul_sfint(a,b) ((sfint)(((( signed long long )(a))*(( signed long long )(b)))>>16)) //multiply two fixed 16:16
 // #define divsfint(a,b) ((sfint)((((signed long long)(a)<<15)/(b)))) 
 // #define abssfint(a) abs(a)
 
