@@ -1,11 +1,12 @@
 #include <math.h>
 #include <stdio.h>
+#include <string.h>
 
 #include "filters.h"
 #include "util.h"
 
-#define BUFFER_LEN 500000
-#define SAMPLE_LEN 1 //sec
+#define BUFFER_LEN 44100
+#define SAMPLE_LEN 2 //sec
 #define AMPLITUDE 9500
 
 void dumpBuffer(int freq, float* wave, sfint* castedWave, sfint* filteredWave, int n) {
@@ -40,9 +41,9 @@ int main() {
     for(int i = 0; i < BUFFER_LEN; i++) {
         time[i] = ((float)i)/(BUFFER_LEN);
     }
-    int freq = 10000;
+    // int freq = 4300;
 
-    // for(int freq = 0; freq < 10000; freq += 100) { //hz
+    for(int freq = 0; freq < 10000; freq += 100) { //hz
         for(int i = 0; i < BUFFER_LEN; i++) {
             wave[i] = AMPLITUDE*sin(2.0f*M_PI*freq*time[i]);
             castedWave[i] = float_to_sfint(wave[i]);
@@ -52,8 +53,9 @@ int main() {
             filter(castedWave+i, filteredWave+i, coeffs, gains);
         }
         dumpBuffer(freq, wave, castedWave, filteredWave, BUFFER_LEN);
-    // }
-    dumpBufferToCSV(freq, time, wave, castedWave, filteredWave, BUFFER_LEN);
+        memset(filteredWave, 0, BUFFER_LEN*sizeof(sfint));
+    }
+    // dumpBufferToCSV(freq, time, wave, castedWave, filteredWave, BUFFER_LEN);
     
     deinitCoefficients(coeffs);
     deinitGains(gains);
