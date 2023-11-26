@@ -16,32 +16,44 @@ void dumpBuffer(int freq, float* wave, sfint* castedWave, sfint* filteredWave, i
 
 }
 
+void dumpBufferToCSV(int freq, float* time, float* wave, sfint* castedWave, sfint* filteredWave, int n) {
+    FILE *fpt;
+    fpt = fopen("output.csv", "w+");
+    fprintf(fpt,"time, wave, castedWave, filteredWave\n");
+    for(int i = 0; i < n; i++) {
+        fprintf(fpt, "%f, %f, %f, %f\n", time[i], wave[i], sfint_to_float(castedWave[i]), sfint_to_float(filteredWave[i]));
+    }
+
+    fclose(fpt);
+}
+
 int main() {
     Coeff* coeffs = initCoefficients();
     Gains* gains = initGains();
 
     // //cos buffer
-    float time[BUFFER_LEN];
-    float wave[BUFFER_LEN]; 
-    sfint castedWave[BUFFER_LEN];
-    sfint filteredWave[BUFFER_LEN];
+    float time[BUFFER_LEN] = {0.0f};
+    float wave[BUFFER_LEN] = {0.0f}; 
+    sfint castedWave[BUFFER_LEN] = {0};
+    sfint filteredWave[BUFFER_LEN] = {0};
 
     for(int i = 0; i < BUFFER_LEN; i++) {
         time[i] = ((float)i)/(BUFFER_LEN);
     }
+    int freq = 10000;
 
-    for(int freq = 0; freq < 10000; freq += 100) { //hz
+    // for(int freq = 0; freq < 10000; freq += 100) { //hz
         for(int i = 0; i < BUFFER_LEN; i++) {
             wave[i] = AMPLITUDE*sin(2.0f*M_PI*freq*time[i]);
             castedWave[i] = float_to_sfint(wave[i]);
         }
 
-        for(int i = BUFFER_LEN-3; i >= 0; i--) {
+        for(int i = BUFFER_LEN-6; i >= 0; i--) {
             filter(castedWave+i, filteredWave+i, coeffs, gains);
         }
         dumpBuffer(freq, wave, castedWave, filteredWave, BUFFER_LEN);
-    }
-
+    // }
+    dumpBufferToCSV(freq, time, wave, castedWave, filteredWave, BUFFER_LEN);
     
     deinitCoefficients(coeffs);
     deinitGains(gains);

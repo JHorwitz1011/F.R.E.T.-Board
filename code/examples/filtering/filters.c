@@ -9,7 +9,7 @@
 // y is the output signal
 
 void lows(sfint* x, sfint* y, Coeff* coeffs){
-    y[0] = mul_sfint((x[0] + 2 * x[1] + x[2]), coeffs->l_b[0]);
+    y[0] = mul_sfint((x[0] + 2*x[1] + x[2]), coeffs->l_b[0]);
     y[0] = y[0] - mul_sfint(y[2], coeffs->l_a[2]);
     y[0] = y[0] - mul_sfint(y[1], coeffs->l_a[1]);
 } 
@@ -54,7 +54,7 @@ void mid3s(sfint* x, sfint* y, Coeff* coeffs) {
 // y is the output signal
 
 void highs(sfint* x, sfint* y, Coeff* coeffs) {
-    y[0] = mul_sfint((x[0] + 2*x[1] + x[2]), coeffs->h_b[0]);
+    y[0] = mul_sfint((x[0] + mul_sfint(int_to_sfint(2), x[1]) + x[2]), coeffs->h_b[0]);
     y[0] = y[0] - mul_sfint(y[2], coeffs->h_a[2]);
     y[0] = y[0] - mul_sfint(y[1], coeffs->h_a[1]);
 }
