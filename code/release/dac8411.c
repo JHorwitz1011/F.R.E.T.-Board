@@ -14,7 +14,7 @@
 // Write 1 byte to the specified register
 void dac8411_write( spi_inst_t *spi, 
                         uint8_t pwr,
-                        s7x16 data) {
+                        sfint data) {
     //convert packet to unsigned type
     uint16_t cnv_data = data + 0x8000;
     //construct packet

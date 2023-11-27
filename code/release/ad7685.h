@@ -9,5 +9,5 @@
 #define AD7685_BYTES_PER_TRANSFER       2
 #define AD7685_BITS_PER_TRANSFER        8
 
-s7x16 ad7685_read(spi_inst_t *spi);
+sfint ad7685_read(spi_inst_t* spi);
 void ad7685_init(spi_inst_t* spi);

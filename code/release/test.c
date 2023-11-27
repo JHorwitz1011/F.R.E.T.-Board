@@ -1,5 +1,4 @@
 #include <stdio.h>
-// #include <stdfix.h>
 
 #include "pico/stdlib.h"
 #include "hardware/i2c.h"
@@ -31,8 +30,8 @@ int main() {
     ad7685_init(spi);
     dac8411_init(spi);
 
-    s7x16 inputs[3];
-    s7x16 outputs[3];
+    sfint inputs[3];
+    sfint outputs[3];
 
     while (true) {
         inputs[2] = inputs[1];

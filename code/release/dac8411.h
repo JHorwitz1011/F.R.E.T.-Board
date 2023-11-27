@@ -17,5 +17,5 @@
 #define DAC8411_POWER_100k_GND          0b10
 #define DAC8411_POWER_HI_Z              0b11
 
-void dac8411_write(spi_inst_t *spi, uint8_t pwr, s7x16 data);
+void dac8411_write(spi_inst_t *spi, uint8_t pwr, sfint data);
 void dac8411_init(spi_inst_t* spi);

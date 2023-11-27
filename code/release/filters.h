@@ -1,47 +1,64 @@
 #pragma once
+#include <stdint.h>
 
-typedef signed int s7x16;
+typedef signed int sfint;
 
-#define muls7x16(a,b) ((s7x16)(((( signed long long )(a))*(( signed long long )(b)))>>16)) //multiply two fixed 16:16
-#define float_to_s7x16(a) ((s7x16)((a)*65536.0)) // 2^16
-#define s7x16_to_float(a) ((float)(a)/65536.0)
-#define s7x16_to_int(a)    ((int)((a)>>16))
-#define int_to_s7x16(a)    ((s7x16)((a)<<16))
-#define divs7x16(a,b) ((s7x16)((((signed long long)(a)<<16)/(b)))) 
-#define abss7x16(a) abs(a)
+//add/sub works as expected
+#define mul_sfint(a,b) ((sfint)(((( signed long long )(a))*(( signed long long )(b)))>>16)) //multiply two fixed 16:16
+// #define divsfint(a,b) ((sfint)((((signed long long)(a)<<15)/(b)))) 
+// #define abssfint(a) abs(a)
 
+
+#define float_to_sfint(a) (sfint)(a * 65536.0) // 2^15
+#define sfint_to_float(a) (((float)(a)) / 65536.0)
+
+// #define int2fix(a) (((fix))((a) << 15))
+// #define fix2int(a) ((int))((a >> 15))
+#define sfint_to_int(a)    ((int)((a)>>16))
+#define int_to_sfint(a)    ((sfint)((a)<<16))
+
+#define MIDPOINT 0x80000000 //65535/2
+#define sfint_to_uint16(a) ((uint16_t)((a+MIDPOINT) >> 16))
+#define uint16_to_sfint(a) ((sfint)((a<<16) + MIDPOINT))
+
+// uint16_t sfint_to_uint16_fn(sfint a) {
+//     a = ((a >> 15) + MIDPOINT);
+//     a += MIDPOINT;
+//     a =
+//     return (uint16_t)(aa >> 15);
+// }
 
 typedef struct Coeff{
     //high pass diff equation coefficients
-    s7x16 l_a[3];
-    s7x16 l_b[3];
+    sfint l_a[3];
+    sfint l_b[3];
     //lower mid diff equation coefficients
-    s7x16 m1_a[3];
-    s7x16 m1_b[3];
+    sfint m1_a[3];
+    sfint m1_b[3];
     //middle mid diff equation coefficients
-    s7x16 m2_a[3];
-    s7x16 m2_b[3];
+    sfint m2_a[3];
+    sfint m2_b[3];
     //high mid diff equation coefficients
-    s7x16 m3_a[3];
-    s7x16 m3_b[3];
+    sfint m3_a[3];
+    sfint m3_b[3];
     //high pass diff equation coefficients
-    s7x16 h_a[3];
-    s7x16 h_b[3];
+    sfint h_a[3];
+    sfint h_b[3];
 } Coeff;
 
 typedef struct Gains {
-    s7x16 l;
-    s7x16 m1;
-    s7x16 m2;
-    s7x16 m3;
-    s7x16 h;
+    sfint l;
+    sfint m1;
+    sfint m2;
+    sfint m3;
+    sfint h;
 } Gains;
 
-void lows(s7x16* x, s7x16* y, Coeff* coeffs);
-void mid1s(s7x16* x, s7x16* y, Coeff* coeffs);
-void mid2s(s7x16* x, s7x16* y, Coeff* coeffs);
-void mid3s(s7x16* x, s7x16* y, Coeff* coeffs);
-void highs(s7x16* x, s7x16* y, Coeff* coeffs);
+void lows(sfint* x, sfint* y, Coeff* coeffs);
+void mid1s(sfint* x, sfint* y, Coeff* coeffs);
+void mid2s(sfint* x, sfint* y, Coeff* coeffs);
+void mid3s(sfint* x, sfint* y, Coeff* coeffs);
+void highs(sfint* x, sfint* y, Coeff* coeffs);
 
 
 /***
@@ -58,4 +75,4 @@ void deinitGains(Gains* gains);
  * First, pop the output buffer leaving y[0] empty
  * Passes the x and y buffer y through all five filters and sums them to be constructs y[0]
  ***/
-void filter(s7x16* x, s7x16* y, Coeff* coeffs, Gains* gains);
+void filter(sfint* x, sfint* y, Coeff* coeffs, Gains* gains);

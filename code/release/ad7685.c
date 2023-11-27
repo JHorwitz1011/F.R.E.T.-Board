@@ -5,7 +5,7 @@
 #include "pins.h"
 #include "ad7685.h"
 
-s7x16 ad7685_read(spi_inst_t *spi) {
+sfint ad7685_read(spi_inst_t *spi) {
     uint16_t dst = 0;
     uint8_t* dst_as_array = (uint8_t*)(&dst);
     gpio_put(CS_AD7685, 1);
@@ -18,7 +18,7 @@ s7x16 ad7685_read(spi_inst_t *spi) {
     dst_as_array[1] = temp;
     gpio_put(CS_AD7685, 0);
 
-    return (s7x16)(dst + 0x8000);
+    return (sfint)(dst + 0x8000);
 }
 
 void ad7685_init(spi_inst_t* spi) {
