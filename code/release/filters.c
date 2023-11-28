@@ -68,8 +68,8 @@ Coeff* initCoefficients() {
 
     //high a = [1.0000   -1.3942    0.5391]
     coeff->h_a[0] = float_to_sfint(1.00);
-    coeff->h_a[1] = float_to_sfint(-1.9752);
-    coeff->h_a[2] = float_to_sfint(0.9755);
+    coeff->h_a[1] = float_to_sfint(-1.3942);
+    coeff->h_a[2] = float_to_sfint(0.5391);
 
     //mid3s b = [0.0026     0   -0.0052]
     coeff->m3_b[0] = float_to_sfint(.0026);
