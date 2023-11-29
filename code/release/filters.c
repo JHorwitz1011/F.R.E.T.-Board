@@ -20,7 +20,7 @@ void lows(sfint* x, sfint* y, Coeff* coeffs){
 // y is the output signal
 
 void mid1s(sfint* x, sfint* y, Coeff* coeffs) {
-	y[0] = mul_sfint((x[0] - 2*x[2]), coeffs->m1_b[0]);
+	y[0] = mul_sfint((x[0] - x[2]), coeffs->m1_b[0]);
 	y[0] = y[0] - mul_sfint(y[2], coeffs->m1_a[2]);
 	y[0] = y[0] - mul_sfint(y[1], coeffs->m1_a[1]);
 } 
@@ -32,7 +32,7 @@ void mid1s(sfint* x, sfint* y, Coeff* coeffs) {
 
 void mid2s(sfint* x, sfint* y, Coeff* coeffs)
 {
-    y[0] = mul_sfint((x[0] - 2*x[2]), coeffs->m2_b[0]);
+    y[0] = mul_sfint((x[0] - x[2]), coeffs->m2_b[0]);
     y[0] = y[0] - mul_sfint(y[2], coeffs->m2_a[2]);
     y[0] = y[0] - mul_sfint(y[1], coeffs->m2_a[1]);
 }
@@ -43,7 +43,7 @@ void mid2s(sfint* x, sfint* y, Coeff* coeffs)
 // y is the output signal
 
 void mid3s(sfint* x, sfint* y, Coeff* coeffs) {
-    y[0] = mul_sfint((x[0] - 2*x[2]), coeffs->m3_b[0]);
+    y[0] = mul_sfint((x[0] - x[2]), coeffs->m3_b[0]);
     y[0] = y[0] - mul_sfint(y[2], coeffs->m3_a[2]);
     y[0] = y[0] - mul_sfint(y[1], coeffs->m3_a[1]);
 }
@@ -54,7 +54,7 @@ void mid3s(sfint* x, sfint* y, Coeff* coeffs) {
 // y is the output signal
 
 void highs(sfint* x, sfint* y, Coeff* coeffs) {
-    y[0] = mul_sfint((x[0] - 2*x[1]) + x[2]), coeffs->h_b[0]);
+    y[0] = mul_sfint((x[0] - 2x[1]) + x[2]), coeffs->h_b[0]);
     y[0] = y[0] - mul_sfint(y[2], coeffs->h_a[2]);
     y[0] = y[0] - mul_sfint(y[1], coeffs->h_a[1]);
 }
@@ -63,42 +63,37 @@ Coeff* initCoefficients() {
     Coeff* coeff = malloc(sizeof(Coeff));
     memset(coeff, 0x00, sizeof(Coeff));
 
-    //high b = [0.7333   -1.4666]
+    //highs b
     coeff->h_b[0] = float_to_sfint(0.7333);
-
-    //high a = [1.0000   -1.3942    0.5391]
+    //highs a
     coeff->h_a[0] = float_to_sfint(1.00);
     coeff->h_a[1] = float_to_sfint(-1.3942);
     coeff->h_a[2] = float_to_sfint(0.5391);
 
-    //mid3s b = [0.0026     0   -0.0052]
-    coeff->m3_b[0] = float_to_sfint(.0026);
-
-    //mid3s a = [1.0000   -3.7560    5.3817]
+    //mid3s b
+    coeff->m3_b[0] = float_to_sfint(0.0504);
+    //mid3s a
     coeff->m3_a[0] = float_to_sfint(1.00);
-    coeff->m3_a[1] = float_to_sfint(-3.7560);
-    coeff->m3_a[2] = float_to_sfint(5.3817);
+    coeff->m3_a[1] = float_to_sfint(-1.8527);
+    coeff->m3_a[2] = float_to_sfint(0.8992);
     
-    //mid2s b = 1.0e-03 * [ 0.4232    0   -0.8464]
-    coeff->m2_b[0] = float_to_sfint(.0004232);
-
-    //mid2s a = [1.0000   -3.9260    5.7951]
+    //mid2s b
+    coeff->m2_b[0] = float_to_sfint(0.0205);
+    //mid2s a
     coeff->m2_a[0] = float_to_sfint(1.00);
-    coeff->m2_a[1] = float_to_sfint(-3.9260);
-    coeff->m2_a[2] = float_to_sfint(5.7951);
+    coeff->m2_a[1] = float_to_sfint(-1.9516);
+    coeff->m2_a[2] = float_to_sfint(0.9591);
 
-    //mid1s b = b = 1.0e-03 * [0.0678   0   -0.1356]
-    coeff->m1_b[0] = float_to_sfint(0.0678);
-
-    //mid1s a = [1.0000   -3.9742    5.9252]
+    //mid1s b
+    coeff->m1_b[0] = float_to_sfint(0.0082);
+    //mid1s a 
     coeff->m1_a[0] = float_to_sfint(1.00);
-    coeff->m1_a[1] = float_to_sfint(-3.9742);
-    coeff->m1_a[2] = float_to_sfint(5.9252);
+    coeff->m1_a[1] = float_to_sfint(-1.9824);
+    coeff->m1_a[2] = float_to_sfint(0.9836);
 
-    //lows b = 1.0e-03 * [0.0761    0.1523]
+    //lows b
     coeff->l_b[0] = float_to_sfint(0.0761);
-
-    //lows a = [1.0000   -1.9752    0.9755]
+    //lows a 
     coeff->l_a[0] = float_to_sfint(1.00);
     coeff->l_a[1] = float_to_sfint(-1.9752);
     coeff->l_a[2] = float_to_sfint(0.9755);
