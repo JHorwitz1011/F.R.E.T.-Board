@@ -3,15 +3,18 @@
 #include <string.h>
 #include <stdlib.h>
 
+#define FIXED2 int_to_sfint(2)
+
 //======================================================== 
 // Second order Butterworth lowpass
 // x is the input signal
 // y is the output signal
 
-void lows(sfint* x, sfint* y, Coeff* coeffs){
-    y[0] = mul_sfint((x[0] - 2*x[1] + x[2]), coeffs->l_b[0]);
-    y[0] = y[0] - mul_sfint(y[2], coeffs->l_a[2]);
-    y[0] = y[0] - mul_sfint(y[1], coeffs->l_a[1]);
+sfint lows(sfint* x, sfint* y, Coeff* coeffs){
+    sfint output = mul_sfint((x[0] - mul_sfint(FIXED2, x[1]) + x[2]), coeffs->l_b[0]);
+    output -= mul_sfint(y[2], coeffs->l_a[2]);
+    output -= mul_sfint(y[1], coeffs->l_a[1]);
+    return output;
 } 
 
 //======================================================== 
@@ -19,10 +22,11 @@ void lows(sfint* x, sfint* y, Coeff* coeffs){
 // x is the input signal
 // y is the output signal
 
-void mid1s(sfint* x, sfint* y, Coeff* coeffs) {
-	y[0] = mul_sfint((x[0] - x[2]), coeffs->m1_b[0]);
-	y[0] = y[0] - mul_sfint(y[2], coeffs->m1_a[2]);
-	y[0] = y[0] - mul_sfint(y[1], coeffs->m1_a[1]);
+sfint mid1s(sfint* x, sfint* y, Coeff* coeffs) {
+	sfint output = mul_sfint((x[0] - x[2]), coeffs->m1_b[0]);
+	output -= mul_sfint(y[2], coeffs->m1_a[2]);
+	output -= mul_sfint(y[1], coeffs->m1_a[1]);
+    return output;
 } 
 
 //======================================================== 
@@ -30,11 +34,12 @@ void mid1s(sfint* x, sfint* y, Coeff* coeffs) {
 // x is the input signal
 // y is the output signal
 
-void mid2s(sfint* x, sfint* y, Coeff* coeffs)
+sfint mid2s(sfint* x, sfint* y, Coeff* coeffs)
 {
-    y[0] = mul_sfint((x[0] - x[2]), coeffs->m2_b[0]);
-    y[0] = y[0] - mul_sfint(y[2], coeffs->m2_a[2]);
-    y[0] = y[0] - mul_sfint(y[1], coeffs->m2_a[1]);
+    sfint output = mul_sfint((x[0] - x[2]), coeffs->m2_b[0]);
+    output -= mul_sfint(y[2], coeffs->m2_a[2]);
+    output -= mul_sfint(y[1], coeffs->m2_a[1]);
+    return output;
 }
 
 //======================================================== 
@@ -42,10 +47,11 @@ void mid2s(sfint* x, sfint* y, Coeff* coeffs)
 // x is the input signal
 // y is the output signal
 
-void mid3s(sfint* x, sfint* y, Coeff* coeffs) {
-    y[0] = mul_sfint((x[0] - x[2]), coeffs->m3_b[0]);
-    y[0] = y[0] - mul_sfint(y[2], coeffs->m3_a[2]);
-    y[0] = y[0] - mul_sfint(y[1], coeffs->m3_a[1]);
+sfint mid3s(sfint* x, sfint* y, Coeff* coeffs) {
+    sfint output = mul_sfint((x[0] - x[2]), coeffs->m3_b[0]);
+    output -= mul_sfint(y[2], coeffs->m3_a[2]);
+    output -= mul_sfint(y[1], coeffs->m3_a[1]);
+    return output;
 }
 
 //======================================================== 
@@ -53,10 +59,11 @@ void mid3s(sfint* x, sfint* y, Coeff* coeffs) {
 // x is the input signal
 // y is the output signal
 
-void highs(sfint* x, sfint* y, Coeff* coeffs) {
-    y[0] = mul_sfint(((x[0] - 2*x[1]) + x[2]), coeffs->h_b[0]);
-    y[0] = y[0] - mul_sfint(y[2], coeffs->h_a[2]);
-    y[0] = y[0] - mul_sfint(y[1], coeffs->h_a[1]);
+sfint highs(sfint* x, sfint* y, Coeff* coeffs) {
+    sfint output = mul_sfint(((x[0] - mul_sfint(FIXED2, x[1])) + x[2]), coeffs->h_b[0]);
+    output -= mul_sfint(y[2], coeffs->h_a[2]);
+    output -= mul_sfint(y[1], coeffs->h_a[1]);
+    return output;
 }
 
 Coeff* initCoefficients() {
@@ -122,17 +129,15 @@ void deinitGains(Gains* gains) {
     free(gains);
 }
 
-void filter(sfint* x, sfint* y, Coeff* coeffs, Gains* gains) {
-    //bump output
-    y[2] = y[1];
-    y[1] = y[0]; 
+sfint filter(sfint* x, sfint* y, Coeff* coeffs, Gains* gains) {
+
     //filter 
     // lows(x,y, coeffs);  
     // y[0] = mul_sfint(y[0], float_to_sfint(1));
     // mid1s(x,y, coeffs);
     // mid2s(x,y, coeffs);
-    mid3s(x,y, coeffs);
-    // highs(x,y, coeffs);
+    // mid3s(x,y, coeffs);
+    return mid1s(x,y, coeffs);
 
     //ignore gains for now
 }

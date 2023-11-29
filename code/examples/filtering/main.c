@@ -63,8 +63,8 @@ int main() {
             castedWave[i] = float_to_sfint(wave[i]);
         }
 
-        for(int i = BUFFER_LEN-6; i >= 0; i--) {
-            filter(castedWave+i, filteredWave+i, coeffs, gains);
+        for(int i = BUFFER_LEN-6; i >= 1; i--) {
+            filteredWave[i-1] = filter(castedWave+i, filteredWave+i, coeffs, gains);
         }
         // dumpBuffer(freq, wave, castedWave, filteredWave, BUFFER_LEN);
         amplitudes[freq] = sfint_to_float(maxFixed(filteredWave, BUFFER_LEN)) - sfint_to_float(minFixed(filteredWave, BUFFER_LEN));

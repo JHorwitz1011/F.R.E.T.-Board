@@ -14,13 +14,13 @@ for row in csvreader:
     x.append(row[0])
     y.append(row[1])
 
-plt.title('mid3 pass amplitude response')
+plt.title('mid1s pass amplitude response')
 plt.plot(x,y)
 plt.xscale('log')
 plt.yscale('log')
 plt.ylabel('amplitude (log)')
 plt.xlabel('freq (log)')
 print('showing!')
-plt.savefig('mid3pass.png')
+plt.savefig('mid1pass.png')
 
 

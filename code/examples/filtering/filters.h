@@ -54,12 +54,12 @@ typedef struct Gains {
     sfint h;
 } Gains;
 
-void lows(sfint* x, sfint* y, Coeff* coeffs);
-void mid1s(sfint* x, sfint* y, Coeff* coeffs);
-void mid2s(sfint* x, sfint* y, Coeff* coeffs);
-void mid3s(sfint* x, sfint* y, Coeff* coeffs);
-void highs(sfint* x, sfint* y, Coeff* coeffs);
-
+sfint lows(sfint* x, sfint* y, Coeff* coeffs);
+sfint mid1s(sfint* x, sfint* y, Coeff* coeffs);
+sfint mid2s(sfint* x, sfint* y, Coeff* coeffs);
+sfint mid3s(sfint* x, sfint* y, Coeff* coeffs);
+sfint highs(sfint* x, sfint* y, Coeff* coeffs);
+    
 
 /***
  * 
@@ -75,4 +75,4 @@ void deinitGains(Gains* gains);
  * First, pop the output buffer leaving y[0] empty
  * Passes the x and y buffer y through all five filters and sums them to be constructs y[0]
  ***/
-void filter(sfint* x, sfint* y, Coeff* coeffs, Gains* gains);
+sfint filter(sfint* x, sfint* y, Coeff* coeffs, Gains* gains);
