@@ -20,7 +20,7 @@ void lows(sfint* x, sfint* y, Coeff* coeffs){
 // y is the output signal
 
 void mid1s(sfint* x, sfint* y, Coeff* coeffs) {
-	y[0] = mul_sfint((x[0] - x[2]), coeffs->m1_b[0]);
+	y[0] = mul_sfint((x[0] - 2*x[2]), coeffs->m1_b[0]);
 	y[0] = y[0] - mul_sfint(y[2], coeffs->m1_a[2]);
 	y[0] = y[0] - mul_sfint(y[1], coeffs->m1_a[1]);
 } 
@@ -32,7 +32,7 @@ void mid1s(sfint* x, sfint* y, Coeff* coeffs) {
 
 void mid2s(sfint* x, sfint* y, Coeff* coeffs)
 {
-    y[0] = mul_sfint((x[0] - x[2]), coeffs->m2_b[0]);
+    y[0] = mul_sfint((x[0] - 2*x[2]), coeffs->m2_b[0]);
     y[0] = y[0] - mul_sfint(y[2], coeffs->m2_a[2]);
     y[0] = y[0] - mul_sfint(y[1], coeffs->m2_a[1]);
 }
@@ -43,7 +43,7 @@ void mid2s(sfint* x, sfint* y, Coeff* coeffs)
 // y is the output signal
 
 void mid3s(sfint* x, sfint* y, Coeff* coeffs) {
-    y[0] = mul_sfint((x[0] - x[2]), coeffs->m3_b[0]);
+    y[0] = mul_sfint((x[0] - 2*x[2]), coeffs->m3_b[0]);
     y[0] = y[0] - mul_sfint(y[2], coeffs->m3_a[2]);
     y[0] = y[0] - mul_sfint(y[1], coeffs->m3_a[1]);
 }
@@ -88,7 +88,7 @@ Coeff* initCoefficients() {
     coeff->m2_a[2] = float_to_sfint(5.7951);
 
     //mid1s b = b = 1.0e-03 * [0.0678   0   -0.1356]
-    coeff->m1_b[0] = float_to_sfint(0.0000678);
+    coeff->m1_b[0] = float_to_sfint(0.0678);
 
     //mid1s a = [1.0000   -3.9742    5.9252]
     coeff->m1_a[0] = float_to_sfint(1.00);
@@ -96,7 +96,7 @@ Coeff* initCoefficients() {
     coeff->m1_a[2] = float_to_sfint(5.9252);
 
     //lows b = 1.0e-03 * [0.0761    0.1523]
-    coeff->l_b[0] = float_to_sfint(0.0000761);
+    coeff->l_b[0] = float_to_sfint(0.0761);
 
     //lows a = [1.0000   -1.9752    0.9755]
     coeff->l_a[0] = float_to_sfint(1.00);
