@@ -16,3 +16,21 @@ pico_add_extra_outputs(test)
 pico_enable_stdio_usb(test 1)
 pico_enable_stdio_uart(test 0)
 
+add_executable( main
+                main.c
+                #peripherals
+                ad7685.c dac8411.c
+                #filtering
+                filters.c
+        )
+
+# pull in common dependencies
+target_link_libraries(main pico_stdlib hardware_spi hardware_i2c)
+
+# create map/bin/hex/uf2 file etc.
+pico_add_extra_outputs(main)
+
+# enable usb output, disable uart output
+pico_enable_stdio_usb(main 1)
+pico_enable_stdio_uart(main 0)
+
