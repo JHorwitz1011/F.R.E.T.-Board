@@ -1,5 +1,7 @@
 #pragma once
 
+#include "hardware/i2c.h"
+
 //i2c address bits
 #define ADS7830_ADDR_READ  0b010010001
 #define ADS7830_ADDR_WRITE 0b010010000

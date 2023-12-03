@@ -13,20 +13,6 @@
 spi_inst_t* spi;
 i2c_inst_t* i2c;
 
-void core1_entry() {
-    repeating_timer_t timer;
-
-    // negative timeout means exact delay (rather than delay between callbacks)
-    if (!add_repeating_timer_us(-1000000 / SYS_FS, timer_callback, NULL, &timer)) {
-        printf("Failed to add timer\n");
-        return 1;
-    }
-
-    //loop go brr
-    while(1)
-        tight_loop_contents();
-}
-
 bool timer_callback(repeating_timer_t *rt) {
     //read new value from adc to memory
     //1 pull from adc
@@ -40,6 +26,20 @@ bool timer_callback(repeating_timer_t *rt) {
     dac8411_write(spi, DAC8411_POWER_NORMAL, data);
 
     return true; //keep repeating
+}
+
+void core1_entry() {
+    repeating_timer_t timer;
+
+    // negative timeout means exact delay (rather than delay between callbacks)
+    if (!add_repeating_timer_us(-1000000 / SYS_FS, timer_callback, NULL, &timer)) {
+        printf("Failed to add timer\n");
+        return 1;
+    }
+
+    //loop go brr
+    while(1)
+        tight_loop_contents();
 }
 
 int main() {
@@ -87,7 +87,7 @@ int main() {
         
         filter(inputs, outputs, coeffs, gains);
         
-        multicore_fifo_push_timeout_us(FIFO_TIMEOUT_US, outputs) {
+        if(multicore_fifo_push_timeout_us(FIFO_TIMEOUT_US, outputs)) {
             while(1)
                 printf("ERROR PUSHING DATA. 0");
         }

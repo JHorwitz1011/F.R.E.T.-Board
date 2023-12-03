@@ -25,7 +25,7 @@ add_executable( release
         )
 
 # pull in common dependencies
-target_link_libraries(release pico_stdlib hardware_spi hardware_i2c)
+target_link_libraries(release pico_stdlib hardware_spi hardware_i2c pico_multicore)
 
 # create map/bin/hex/uf2 file etc.
 pico_add_extra_outputs(release)

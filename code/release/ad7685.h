@@ -1,7 +1,9 @@
 #pragma once
 
+
 #include "filters.h"
 #include "hardware/spi.h"
+#include "hardware/i2c.h"
 
 #define CPOL_AD7685 0
 #define CPHA_AD7685 0
