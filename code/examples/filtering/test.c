@@ -143,6 +143,8 @@ void main() {
     testMultiplication(int_to_sfint(1),int_to_sfint(0));
     testMultiplication(int_to_sfint(1),int_to_sfint(1));
     testMultiplication(int_to_sfint(10),int_to_sfint(10));
+    testMultiplication(int_to_sfint(-10),int_to_sfint(-10));
+    testMultiplication(int_to_sfint(10),int_to_sfint(-10));
     testMultiplication(int_to_sfint(10000), float_to_sfint(3.2));
 
 }

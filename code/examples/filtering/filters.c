@@ -153,11 +153,11 @@ void deinitGains(Gains* gains) {
 }
 
 sfint filter(sfint* x, sfint* y, Coeff* coeffs, Gains* gains) {
-    // return 1;
-    return mulx(gains->l, lows(x,y, coeffs)) + mulx(gains->m1, mid1s(x,y, coeffs)) + mulx(gains->m2, mid2s(x,y, coeffs)) + mulx(gains->m3, mid3s(x,y,coeffs)) + mulx(gains->h, highs(x,y, coeffs));  
+    return 1;
+    // return mulx(gains->l, lows(x,y, coeffs)) + mulx(gains->m1, mid1s(x,y, coeffs)) + mulx(gains->m2, mid2s(x,y, coeffs)) + mulx(gains->m3, mid3s(x,y,coeffs)) + mulx(gains->h, highs(x,y, coeffs));  
 }
 
 float filterFloat(float* x, float* y) {
-    // return 1.0f;
-    return DEFAULT_LOW_GAIN*lowFloat(x,y) + DEFAULT_LOW_GAIN*mid1Float(x,y) + DEFAULT_LOW_GAIN*mid2Float(x,y) + DEFAULT_LOW_GAIN*mid3Float(x,y) + DEFAULT_LOW_GAIN*highFloat(x,y);  
+    return 1.0f;
+    // return DEFAULT_LOW_GAIN*lowFloat(x,y) + DEFAULT_LOW_GAIN*mid1Float(x,y) + DEFAULT_LOW_GAIN*mid2Float(x,y) + DEFAULT_LOW_GAIN*mid3Float(x,y) + DEFAULT_LOW_GAIN*highFloat(x,y);  
 }
