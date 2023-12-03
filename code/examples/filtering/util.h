@@ -14,3 +14,5 @@ float maxFixed(sfint* buffer, int n);
 
 float averageFloat(float* buffer, int n);
 float averageFixed(sfint* buffer, int n);
+
+void printCoeffs(Coeff* coeffs);

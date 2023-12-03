@@ -48,10 +48,6 @@ int main() {
     
     stdio_init_all();
 
-    //initialize queues
-    queue_init(&mem_to_dac_fifo, sizeof(sfint), FIFO_LEN);
-    queue_init(&adc_to_mem_fifo, sizeof(sfint), FIFO_LEN);
-    
     //initialize filter parameters
     coeffs = initCoefficients();
     gains = initGains();

@@ -59,7 +59,8 @@ sfint mid1s(sfint* x, sfint* y, Coeff* coeffs);
 sfint mid2s(sfint* x, sfint* y, Coeff* coeffs);
 sfint mid3s(sfint* x, sfint* y, Coeff* coeffs);
 sfint highs(sfint* x, sfint* y, Coeff* coeffs);
-    
+
+float lowFloat(float* x, float* y, Coeff* coeffs);
 
 /***
  * 

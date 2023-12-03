@@ -88,3 +88,51 @@ float averageFixed(sfint* buffer, int n) {
     return sum;
 }
 
+void printCoeff(sfint input, char prepend[]) {
+    printf("%s", prepend);
+    printf(" %f ", sfint_to_float(input));
+    printBits(sizeof(input), &(input));
+    printf("\n");
+}
+
+void printCoeffs(Coeff* coeffs) {
+    printf("~~~~~~~~~~~~~~~LOWPASS~~~~~~~~~~~~~~~\n");
+    printCoeff(coeffs->l_a[0], "a0");
+    printCoeff(coeffs->l_a[1], "a1");
+    printCoeff(coeffs->l_a[2], "a2");
+    printCoeff(coeffs->l_b[0], "b0");
+    printCoeff(coeffs->l_b[1], "b1");
+    printCoeff(coeffs->l_b[2], "b2");
+    
+    printf("~~~~~~~~~~~~~~~MID1~~~~~~~~~~~~~~~\n");
+    printCoeff(coeffs->m1_a[0], "a0");
+    printCoeff(coeffs->m1_a[1], "a1");
+    printCoeff(coeffs->m1_a[2], "a2");
+    printCoeff(coeffs->m1_b[0], "b0");
+    printCoeff(coeffs->m1_b[1], "b1");
+    printCoeff(coeffs->m1_b[2], "b2");
+
+    printf("~~~~~~~~~~~~~~~MID2~~~~~~~~~~~~~~~\n");
+    printCoeff(coeffs->m2_a[0], "a0");
+    printCoeff(coeffs->m2_a[1], "a1");
+    printCoeff(coeffs->m2_a[2], "a2");
+    printCoeff(coeffs->m2_b[0], "b0");
+    printCoeff(coeffs->m2_b[1], "b1");
+    printCoeff(coeffs->m2_b[2], "b2");
+
+    printf("~~~~~~~~~~~~~~~MID3~~~~~~~~~~~~~~~\n");
+    printCoeff(coeffs->m3_a[0], "a0");
+    printCoeff(coeffs->m3_a[1], "a1");
+    printCoeff(coeffs->m3_a[2], "a2");
+    printCoeff(coeffs->m3_b[0], "b0");
+    printCoeff(coeffs->m3_b[1], "b1");
+    printCoeff(coeffs->m3_b[2], "b2");
+
+    printf("~~~~~~~~~~~~~~~HIGHPASS~~~~~~~~~~~~~~~\n");
+    printCoeff(coeffs->h_a[0], "a0");
+    printCoeff(coeffs->h_a[1], "a1");
+    printCoeff(coeffs->h_a[2], "a2");
+    printCoeff(coeffs->h_b[0], "b0");
+    printCoeff(coeffs->h_b[1], "b1");
+    printCoeff(coeffs->h_b[2], "b2");
+}
