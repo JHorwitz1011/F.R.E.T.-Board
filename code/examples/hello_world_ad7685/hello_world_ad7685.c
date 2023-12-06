@@ -21,6 +21,7 @@
 // Write 1 byte to the specified register
 void ad7685_read(spi_inst_t *spi, uint8_t* dst) {
     gpio_put(CS_AD7685, 1);
+    sleep_us(4);
     spi_read_blocking(spi, 0x00, dst, AD7685_BYTES_PER_TRANSFER);
     uint8_t temp = dst[0];
     dst[0] = dst[1];
