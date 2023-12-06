@@ -18,20 +18,11 @@ void printTest(sfint a, sfint b) {
 sfint mulx(sfint a, sfint b) {
     // printf("a: %f, b: %f, axb %f, FLOAT: a: %f, b: %f, axb: %f\n", a/65536.0, b/65536.0, mul_sfint(a,b)/65536.0, sfint_to_float(a), sfint_to_float(b), sfint_to_float(a) * sfint_to_float(b));
     if(sfint_to_float(a) * sfint_to_float(b) > 32767 || sfint_to_float(a) * sfint_to_float(b) < -32768 ) {
-        printf("., %f,  %f", sfint_to_float(a), sfint_to_float(b));
+        printf("., %f,  %f\n", sfint_to_float(a), sfint_to_float(b));
+        // while(1);
     }
     return mul_sfint(a,b);
 }
-
-// sfint lows(sfint* x, sfint* y, Coeff* coeffs){
-//     printTest(coeffs->h_b[0], x[0]);
-//     printTest(coeffs->h_b[1], x[1]);
-//     printTest(coeffs->h_b[2],x[2]);
-//     printTest(coeffs->h_a[1], y[1]);
-//     printTest(coeffs->h_a[2], y[2]);
-//     printf("\n\n");
-//     return mul_sfint(coeffs->h_b[0], x[0]) + mul_sfint(coeffs->h_b[1], x[1]) + mul_sfint(coeffs->h_b[2],x[2]) - mul_sfint(coeffs->h_a[1],y[1]) - mul_sfint(coeffs->h_a[2], y[2]);
-// } 
 
 sfint lows(sfint* x, sfint* y, Coeff* coeffs){
     return mulx(coeffs->l_b[0], x[-0]) + mulx(coeffs->l_b[1], x[-1]) + mulx(coeffs->l_b[2],x[-2]) - mulx(coeffs->l_a[1],y[-1]) - mulx(coeffs->l_a[2], y[-2]);
@@ -76,8 +67,6 @@ sfint highs(sfint* x, sfint* y, Coeff* coeffs){
 float highFloat(float* x, float* y){
     return (HIGHB0)*(x[0]) + (HIGHB1)*(x[-1]) + (HIGHB2)*(x[-2]) - (HIGHA1)*(y[-1]) - (HIGHA2)*(y[-2]);
 } 
-
-
 
 Coeff* initCoefficients() {
     Coeff* coeff = malloc(sizeof(Coeff));
@@ -153,11 +142,11 @@ void deinitGains(Gains* gains) {
 }
 
 sfint filter(sfint* x, sfint* y, Coeff* coeffs, Gains* gains) {
-    // return 1;
-    return mulx(gains->l, lows(x,y, coeffs)) + mulx(gains->m1, mid1s(x,y, coeffs)) + mulx(gains->m2, mid2s(x,y, coeffs)) + mulx(gains->m3, mid3s(x,y,coeffs)) + mulx(gains->h, highs(x,y, coeffs));  
+    return x[0];
+    // return lows(x,y,coeffs);
 }
 
 float filterFloat(float* x, float* y) {
-    // return 1.0f;
-    return DEFAULT_LOW_GAIN*lowFloat(x,y) + DEFAULT_LOW_GAIN*mid1Float(x,y) + DEFAULT_LOW_GAIN*mid2Float(x,y) + DEFAULT_LOW_GAIN*mid3Float(x,y) + DEFAULT_LOW_GAIN*highFloat(x,y);  
+    return 1.0f;
+    // return DEFAULT_LOW_GAIN*lowFloat(x,y) + DEFAULT_LOW_GAIN*mid1Float(x,y) + DEFAULT_LOW_GAIN*mid2Float(x,y) + DEFAULT_LOW_GAIN*mid3Float(x,y) + DEFAULT_LOW_GAIN*highFloat(x,y);  
 }

@@ -14,7 +14,7 @@ def validRow(row):
             counter += 1
 
     if counter > 1:
-        print('true!')
+        # print('true!')
         return True
     else:
         return False
@@ -58,8 +58,31 @@ for row in csvreader:
         floatResponses["high"].append(float(row[10])/(AMPLITUDE))
         floatResponses["full"].append(float(row[12])/(AMPLITUDE))
         
-print(fixedResponses)
-print(floatResponses)
+# print(fixedResponses)
+# print(floatResponses)
+
+mid1 = max(fixedResponses['mid1'])
+mid2 = max(fixedResponses['mid2'])
+mid3 = max(fixedResponses['mid3'])
+
+highFlag = False
+lowFlag = False
+
+for i in range(10,len(fixedResponses['low'])):
+    if mid1 == fixedResponses['mid1'][i]:
+        print(f"MID1 @ {freq[i]}")
+    if mid2 == fixedResponses['mid2'][i]:
+        print(f"MID2 @ {freq[i]}")
+    if mid3 == fixedResponses['mid3'][i]:
+        print(f"MID3 @ {freq[i]}")
+
+    if fixedResponses['high'][i] > 0.707 and not highFlag:
+        print(f"high PASS 3DB AT {freq[i]}")
+        highFlag = True
+    if fixedResponses['low'][i] < 0.707 and not lowFlag:
+        print(f"low PASS 3DB AT {freq[i]}")
+        lowFlag = True
+
 
 
 # print full response
@@ -69,7 +92,7 @@ plt.plot(freq, fixedResponses['full'], label='fixed')
 plt.plot(freq, floatResponses['full'], label='float')
 plt.legend()
 plt.xscale('log')
-plt.yscale('log')
+# plt.yscale('log')
 plt.ylabel('amplitude (log)')
 plt.xlabel('freq (log)')
 plt.savefig('fullFilterBoth.png')
@@ -115,7 +138,7 @@ plt.plot(freq, fixedResponses['mid3'], label='fixedM3')
 plt.plot(freq, floatResponses['mid3'], label='floatM3')
 plt.legend()
 plt.xscale('log')
-plt.yscale('log')
+# plt.yscale('log')
 plt.ylabel('amplitude (log)')
 plt.xlabel('freq (log)')
 plt.savefig('individualResponsesBoth.png')
@@ -129,6 +152,7 @@ plt.plot(freq, fixedResponses['high'], label='fixedH')
 plt.plot(freq, fixedResponses['mid1'], label='fixedM1')
 plt.plot(freq, fixedResponses['mid2'], label='fixedM2')
 plt.plot(freq, fixedResponses['mid3'], label='fixedM3')
+plt.plot(freq, fixedResponses['full'], label='fixedFull')
 plt.legend()
 plt.xscale('log')
 plt.yscale('log')

@@ -73,11 +73,21 @@ typedef struct Coeff{
     sfint h_b[3];
 } Coeff;
 
-#define DEFAULT_LOW_GAIN 1.0f
-#define DEFAULT_MID1_GAIN 1.0f
+typedef struct Feedbacks{
+    sfint l[3];
+    sfint m1[3];
+    sfint m2[3];
+    sfint m3[3];
+    sfint h[3];
+} Feedbacks;
+
+
+
+#define DEFAULT_LOW_GAIN 1.5f
+#define DEFAULT_MID1_GAIN .00001f
 #define DEFAULT_MID2_GAIN 1.0f
-#define DEFAULT_MID3_GAIN 1.0f
-#define DEFAULT_HIGH_GAIN 1.0f
+#define DEFAULT_MID3_GAIN .00001f
+#define DEFAULT_HIGH_GAIN 1.5f
 
 typedef struct Gains {
     sfint l;
@@ -107,12 +117,19 @@ void deinitCoefficients(Coeff* coeffs);
 
 Gains* initGains();
 void deinitGains(Gains* gains);
+
+Feedbacks* initFeedbacks();
+void deinitFeedbacks(Feedbacks* fb);
+
 /***
  * Uses the input buffer to filter and construct the output buffer
  * It is assumed that x is updated with current values.
  * First, pop the output buffer leaving y[0] empty
  * Passes the x and y buffer y through all five filters and sums them to be constructs y[0]
  ***/
-sfint filter(sfint* x, sfint* y, Coeff* coeffs, Gains* gains);
+sfint filter(sfint* x, Feedbacks* fb, Coeff* coeffs, Gains* gains);
 float filterFloat(float* x, float* y);
+
+void stepFb(Feedbacks* fb);
+void step(sfint* fbArray);
 

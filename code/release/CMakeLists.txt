@@ -4,6 +4,7 @@ add_executable( test
                 ad7685.c dac8411.c
                 #filtering
                 filters.c
+                util.c
         )
 
 # pull in common dependencies
@@ -22,6 +23,7 @@ add_executable( release
                 ad7685.c dac8411.c
                 #filtering
                 filters.c
+                util.c
         )
 
 # pull in common dependencies

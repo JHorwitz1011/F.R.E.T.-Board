@@ -72,12 +72,8 @@ void dac8411_write( spi_inst_t *spi,
                         uint8_t pwr,
                         uint16_t data) {
     //construct packet
-    uint32_t pkt = ((pwr << DAC8411_PWR_SHIFT) & DAC8411_PWR_MASK) | ((data << DAC8411_DATA_SHIFT) & DAC8411_DATA_MASK);
-    uint8_t b1 = ((pkt & 0xFF0000) >> 16);
-    uint8_t b3 = (pkt & 0x0000FF) << 16;
-    pkt = (0x00FF00 & pkt) | b1 | b3; 
+    uint32_t pkt = (pwr << 6) | (data >> 10) | ((data  & 0b0000001111111100 ) << 6) | ((data & 0b11) << 22);
 
-    printf("spitting out %d\n", pkt);
     //send over spi
     gpio_put(CS_DAC8411, 0);
     spi_write_blocking(spi, (uint8_t*)&pkt, 3);
@@ -119,8 +115,8 @@ int main() {
 
     // Loop forever
     float counter = 0;
-    while (true) {
         uint16_t sample = 0;
+    while (true) {
         ad7685_read(spi, (uint8_t*)&sample);
         // printf("%d\n", sample);
         // sleep_ms(10);

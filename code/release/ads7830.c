@@ -1,4 +1,3 @@
-#include "hardware/i2c.h"
 
 #include "pins.h"
 #include "ads7830.h"

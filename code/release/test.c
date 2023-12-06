@@ -34,18 +34,21 @@ int main() {
     sfint outputs[3];
 
     while (true) {
-        inputs[2] = inputs[1];
-        inputs[1] = inputs[0];
-        inputs[0] = ad7685_read(spi);
+
+        //shift buffers
+        inputs[0] = inputs[1];
+        inputs[1] = inputs[2];
+
+        outputs[0] = outputs[1];
+        outputs[1] = outputs[2];
+
+        inputs[2] = ad7685_read(spi);
 
         // printf("%d\n", inputs[0]);
-        filter(inputs, outputs, coeffs, gains);
+        outputs[2] = filter(inputs, outputs, coeffs, gains);
         // sleep_us(2);
-        dac8411_write(spi, DAC8411_POWER_NORMAL, outputs[0]);
+        dac8411_write(spi, DAC8411_POWER_NORMAL, outputs[2]);
 
-        // gpio_put(UTIL2, 1);
-        // sleep_us(1);
-        // gpio_put(UTIL2, 0);
     }
 
     deinitCoefficients(coeffs);

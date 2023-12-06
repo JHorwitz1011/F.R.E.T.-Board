@@ -18,20 +18,11 @@ void printTest(sfint a, sfint b) {
 sfint mulx(sfint a, sfint b) {
     // printf("a: %f, b: %f, axb %f, FLOAT: a: %f, b: %f, axb: %f\n", a/65536.0, b/65536.0, mul_sfint(a,b)/65536.0, sfint_to_float(a), sfint_to_float(b), sfint_to_float(a) * sfint_to_float(b));
     if(sfint_to_float(a) * sfint_to_float(b) > 32767 || sfint_to_float(a) * sfint_to_float(b) < -32768 ) {
-        printf("., %f,  %f", sfint_to_float(a), sfint_to_float(b));
+        printf("., %f,  %f\n", sfint_to_float(a), sfint_to_float(b));
+        // while(1);
     }
     return mul_sfint(a,b);
 }
-
-// sfint lows(sfint* x, sfint* y, Coeff* coeffs){
-//     printTest(coeffs->h_b[0], x[0]);
-//     printTest(coeffs->h_b[1], x[1]);
-//     printTest(coeffs->h_b[2],x[2]);
-//     printTest(coeffs->h_a[1], y[1]);
-//     printTest(coeffs->h_a[2], y[2]);
-//     printf("\n\n");
-//     return mul_sfint(coeffs->h_b[0], x[0]) + mul_sfint(coeffs->h_b[1], x[1]) + mul_sfint(coeffs->h_b[2],x[2]) - mul_sfint(coeffs->h_a[1],y[1]) - mul_sfint(coeffs->h_a[2], y[2]);
-// } 
 
 sfint lows(sfint* x, sfint* y, Coeff* coeffs){
     return mulx(coeffs->l_b[0], x[-0]) + mulx(coeffs->l_b[1], x[-1]) + mulx(coeffs->l_b[2],x[-2]) - mulx(coeffs->l_a[1],y[-1]) - mulx(coeffs->l_a[2], y[-2]);
@@ -76,8 +67,6 @@ sfint highs(sfint* x, sfint* y, Coeff* coeffs){
 float highFloat(float* x, float* y){
     return (HIGHB0)*(x[0]) + (HIGHB1)*(x[-1]) + (HIGHB2)*(x[-2]) - (HIGHA1)*(y[-1]) - (HIGHA2)*(y[-2]);
 } 
-
-
 
 Coeff* initCoefficients() {
     Coeff* coeff = malloc(sizeof(Coeff));
@@ -152,9 +141,36 @@ void deinitGains(Gains* gains) {
     free(gains);
 }
 
-sfint filter(sfint* x, sfint* y, Coeff* coeffs, Gains* gains) {
-    return 1;
-    // return mulx(gains->l, lows(x,y, coeffs)) + mulx(gains->m1, mid1s(x,y, coeffs)) + mulx(gains->m2, mid2s(x,y, coeffs)) + mulx(gains->m3, mid3s(x,y,coeffs)) + mulx(gains->h, highs(x,y, coeffs));  
+Feedbacks* initFeedbacks() {
+    Feedbacks* fb = malloc(sizeof(Feedbacks));
+    memset(fb, 0x00, sizeof(Feedbacks));
+    return fb;
+}
+
+void deinitFeedbacks(Feedbacks* fb) {
+    free(fb);
+}
+
+sfint filter(sfint* x, Feedbacks* fb, Coeff* coeffs, Gains* gains) {
+    fb->l[2] = lows(x, fb->l+2, coeffs);
+    fb->m1[2] = mid1s(x, fb->m1+2, coeffs);
+    fb->m2[2] = mid2s(x, fb->m2+2, coeffs);
+    fb->m3[2] = mid3s(x, fb->m3+2, coeffs);
+    fb->h[2] = highs(x, fb->h+2, coeffs);
+    return mulx(gains->l, fb->l[2]) + mulx(gains->m1, fb->m1[2]) + mulx(gains->m2, fb->m2[2]) + mulx(gains->m3, fb->m3[2]) + mulx(gains->h, fb->h[2]);  
+}
+
+void step(sfint* fbArray) {
+    fbArray[0] = fbArray[1];
+    fbArray[1] = fbArray[2];
+}
+
+void stepFb(Feedbacks* fb) {
+    step(fb->l);
+    step(fb->m1);
+    step(fb->m2);
+    step(fb->m3);
+    step(fb->h);
 }
 
 float filterFloat(float* x, float* y) {

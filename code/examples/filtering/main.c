@@ -44,12 +44,12 @@ void dumpFreqToCSV(int* freq,
     fprintf(fpt,"freq, lows, lowsIdeal, mid1s, mid1sIdeal, mid2s, mid2sIdeal, mid3s, mid3sIdeal, highs, highsIdeal, full, fullIdeal\n");
     for(int i = 0; i < n; i++) {
         fprintf(fpt, "%d, ", freq[i]);
-        fprintf(fpt, "%f, %f, ", sfint_to_float(lowpk[i]), lowpkIdeal[i]);
-        fprintf(fpt, "%f, %f, ", sfint_to_float(mid1pk[i]), mid1pkIdeal[i]);
-        fprintf(fpt, "%f, %f, ", sfint_to_float(mid2pk[i]), mid2pkIdeal[i]);
-        fprintf(fpt, "%f, %f, ", sfint_to_float(mid3pk[i]), mid3pkIdeal[i]);
-        fprintf(fpt, "%f, %f, ", sfint_to_float(highpk[i]), highpkIdeal[i]);
-        fprintf(fpt, "%f, %f\n", sfint_to_float(fullpk[i]), fullpkIdeal[i]);
+        fprintf(fpt, "%f, %f, ", lowpk[i], lowpkIdeal[i]);
+        fprintf(fpt, "%f, %f, ", mid1pk[i], mid1pkIdeal[i]);
+        fprintf(fpt, "%f, %f, ", mid2pk[i], mid2pkIdeal[i]);
+        fprintf(fpt, "%f, %f, ", mid3pk[i], mid3pkIdeal[i]);
+        fprintf(fpt, "%f, %f, ", (highpk[i]), highpkIdeal[i]);
+        fprintf(fpt, "%f, %f\n", (fullpk[i]), fullpkIdeal[i]);
     }
     fclose(fpt);
 }
@@ -65,7 +65,9 @@ float floatPkPk(float* buffer, int n){
 int main() {
     Coeff* coeffs = initCoefficients();
     Gains* gains = initGains();
+    Feedbacks* fb = initFeedbacks();
     printCoeffs(coeffs);
+    printGains(gains);
 
     //fill buffers
     float time[BUFFER_LEN] = {0.0f};
@@ -129,7 +131,7 @@ int main() {
         for(int i = 2; i < BUFFER_LEN; i++) {
             sfintLowFilteredWave[i] = lows(sfintWave+i, sfintLowFilteredWave+i, coeffs);
             floatLowFilteredWave[i] = lowFloat(floatWave+i, floatLowFilteredWave+i);
-
+            // printf("sfint: %f, float: %f, sfint_pkpk: %f, float_pkpk: %f\n", sfint_to_float(sfintLowFilteredWave[i]), floatLowFilteredWave[i], fixedPkPk(sfintLowFilteredWave, i), floatPkPk(floatLowFilteredWave, i));
             sfintMid1FilteredWave[i] = mid1s(sfintWave+i, sfintMid1FilteredWave+i, coeffs);
             floatMid1FilteredWave[i] = mid1Float(floatWave+i, floatMid1FilteredWave+i);
 
@@ -142,8 +144,9 @@ int main() {
             sfintHighFilteredWave[i] = highs(sfintWave+i, sfintHighFilteredWave+i, coeffs);
             floatHighFilteredWave[i] = highFloat(floatWave+i, floatHighFilteredWave+i);
 
-            sfintFullFilteredWave[i] = filter(sfintWave+i, sfintFullFilteredWave+i, coeffs, gains);
-            floatFullFilteredWave[i] = filterFloat(floatWave+i, floatFullFilteredWave+i);
+            stepFb(fb);
+            sfintFullFilteredWave[i] = filter(sfintWave+i, fb, coeffs, gains);
+            // floatFullFilteredWave[i] = filterFloat(floatWave+i, floatFullFilteredWave+i);
         }
 
         //log results
@@ -164,6 +167,8 @@ int main() {
         fullFloatPks[freq] = floatPkPk(floatFullFilteredWave, BUFFER_LEN);
 
         //reset value
+        memset(fb, 0, sizeof(Feedbacks));
+        
         memset(sfintWave, 0, BUFFER_LEN*sizeof(sfint));
         memset(floatWave, 0, BUFFER_LEN*sizeof(float));
         
@@ -190,6 +195,7 @@ int main() {
     
     deinitCoefficients(coeffs);
     deinitGains(gains);
+    deinitFeedbacks(fb);
 
 
 }

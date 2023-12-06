@@ -10,21 +10,20 @@
 #include "dac8411.h"
 #include "pins.h"
 #include "filters.h"
+#include "util.h"
 
 // Write 1 byte to the specified register
 void dac8411_write( spi_inst_t *spi, 
                         uint8_t pwr,
                         sfint data) {
     //convert packet to unsigned type
-    uint16_t cnv_data = data + 0x8000;
-    //construct packet
-    // uint32_t pkt = (pwr << DAC8411_PWR_SHIFT) | (cnv_data << DAC8411_DATA_SHIFT);
-    // uint8_t b1 = ((pkt & 0xFF0000) >> 16);
-    // uint8_t b3 = (pkt & 0x0000FF) << 16;
-    // pkt = (0x00FF00 & pkt) | b1 | b3; 
-
+    uint16_t cnv_data = sfint_to_uint16(data);
     uint32_t pkt = (pwr << 6) | (cnv_data >> 10) | ((cnv_data  & 0b0000001111111100 ) << 6) | ((cnv_data & 0b11) << 22);
-
+    // printf("WRITING cnv: ");
+    // printBits(2, &cnv_data);
+    // printf(" pkt: ");
+    // printBits(4, &pkt);
+    // printf("\n");
     //send over spi
     gpio_put(CS_DAC8411, 0);
     spi_write_blocking(spi, (uint8_t*)&pkt, 3);

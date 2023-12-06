@@ -95,6 +95,16 @@ void printCoeff(sfint input, char prepend[]) {
     printf("\n");
 }
 
+void printGains(Gains* gain) {
+    printf("~~~~~~~~~~~~~~~GAINS~~~~~~~~~~~~~~~\n");
+    printCoeff(gain->l, "l");
+    printCoeff(gain->m1, "m1");
+    printCoeff(gain->m2, "m2");
+    printCoeff(gain->m3, "m3");
+    printCoeff(gain->h, "h");
+
+}
+
 void printCoeffs(Coeff* coeffs) {
     printf("~~~~~~~~~~~~~~~LOWPASS~~~~~~~~~~~~~~~\n");
     printCoeff(coeffs->l_a[0], "a0");
