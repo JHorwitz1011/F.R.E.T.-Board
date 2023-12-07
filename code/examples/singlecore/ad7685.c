@@ -14,7 +14,6 @@ sfint ad7685_read(spi_inst_t *spi) {
     sleep_us(4);
     spi_read_blocking(spi, 0x00, dst_as_array, AD7685_BYTES_PER_TRANSFER);
     uint8_t temp = dst_as_array[0];
-    // printf("%d\n", dst);
     dst_as_array[0] = dst_as_array[1];
     dst_as_array[1] = temp;   
     gpio_put(CS_AD7685, 0);

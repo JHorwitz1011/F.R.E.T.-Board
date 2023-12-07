@@ -35,7 +35,7 @@ int main() {
         sfint sample = ad7685_read(spi); 
         printf("uint16_t %d, sfint %f, voltage %f\n", sfint_to_uint16(sample), sfint_to_float(sample), sampleToVoltage(sfint_to_uint16(sample)));
         // printBits(4, &sample);
-        printf("\n");
-        // sleep_ms(1000);
+        // printf("\n");
+        sleep_ms(10);
     }
 }
