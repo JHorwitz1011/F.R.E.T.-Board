@@ -4,7 +4,6 @@
 #include "filters.h"
 #include "hardware/spi.h"
 
-
 #define CPOL_AD7685 0
 #define CPHA_AD7685 0
 

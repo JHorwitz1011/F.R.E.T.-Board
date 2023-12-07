@@ -33,7 +33,7 @@ float lowFloat(float* x, float* y){
 } 
 
 sfint mid1s(sfint* x, sfint* y, Coeff* coeffs){
-    return mul_sfint(coeffs->m1_b[0], x[-0]) + mul_sfint(coeffs->m1_b[1], x[-1]) + mul_sfint(coeffs->m1_b[2],x[-2]) - mul_sfint(coeffs->m1_a[1],y[-1]) - mul_sfint(coeffs->m1_a[2], y[-2]);
+    return mul_sfint(coeffs->m1_b[0], x[-0]) + mul_sfint(coeffs->m1_b[2],x[-2]) - mul_sfint(coeffs->m1_a[1],y[-1]) - mul_sfint(coeffs->m1_a[2], y[-2]);
 } 
 
 
@@ -42,7 +42,7 @@ float mid1Float(float* x, float* y){
 } 
 
 sfint mid2s(sfint* x, sfint* y, Coeff* coeffs){
-    return mul_sfint(coeffs->m2_b[0], x[-0]) + mul_sfint(coeffs->m2_b[1], x[-1]) + mul_sfint(coeffs->m2_b[2],x[-2]) - mul_sfint(coeffs->m2_a[1],y[-1]) - mul_sfint(coeffs->m2_a[2], y[-2]);
+    return mul_sfint(coeffs->m2_b[0], x[-0]) + mul_sfint(coeffs->m2_b[2],x[-2]) - mul_sfint(coeffs->m2_a[1],y[-1]) - mul_sfint(coeffs->m2_a[2], y[-2]);
 } 
 
 
@@ -51,7 +51,7 @@ float mid2Float(float* x, float* y){
 } 
 
 sfint mid3s(sfint* x, sfint* y, Coeff* coeffs){
-    return mul_sfint(coeffs->m3_b[0], x[-0]) + mul_sfint(coeffs->m3_b[1], x[-1]) + mul_sfint(coeffs->m3_b[2],x[-2]) - mul_sfint(coeffs->m3_a[1],y[-1]) - mul_sfint(coeffs->m3_a[2], y[-2]);
+    return mul_sfint(coeffs->m3_b[0], x[0]) + mul_sfint(coeffs->m3_b[2],x[-2]) - mul_sfint(coeffs->m3_a[1],y[-1]) - mul_sfint(coeffs->m3_a[2], y[-2]);
 } 
 
 
@@ -59,10 +59,12 @@ float mid3Float(float* x, float* y) {
     return (MID3B0)*(x[0]) + (MID3B1)*(x[-1]) + (MID3B2)*(x[-2]) - (MID3A1)*(y[-1]) - (MID3A2)*(y[-2]);
 } 
 
+// sfint highs(sfint* x, sfint* y, Coeff* coeffs){
+//     return mul_sfint(coeffs->h_b[0], x[-0]) + mul_sfint(coeffs->h_b[1], x[-1]) + mul_sfint(coeffs->h_b[2],x[-2]) - mul_sfint(coeffs->h_a[1],y[-1]) - mul_sfint(coeffs->h_a[2], y[-2]);
+// } 
 sfint highs(sfint* x, sfint* y, Coeff* coeffs){
-    return mul_sfint(coeffs->h_b[0], x[-0]) + mul_sfint(coeffs->h_b[1], x[-1]) + mul_sfint(coeffs->h_b[2],x[-2]) - mul_sfint(coeffs->h_a[1],y[-1]) - mul_sfint(coeffs->h_a[2], y[-2]);
+    return x[0] + mul_sfint(coeffs->h_b[1], x[-1]) + x[-2] - y[-1] - mul_sfint(coeffs->h_a[2], y[-2]);
 } 
-
 
 float highFloat(float* x, float* y){
     return (HIGHB0)*(x[0]) + (HIGHB1)*(x[-1]) + (HIGHB2)*(x[-2]) - (HIGHA1)*(y[-1]) - (HIGHA2)*(y[-2]);

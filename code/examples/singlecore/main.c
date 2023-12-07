@@ -7,6 +7,7 @@
 #include "util.h"
 #include "dac8411.h"
 #include "ads7830.h"
+#include "pins.h"
 
 float sampleToVoltage(uint16_t input) {
     float precision = 65536;
@@ -14,7 +15,7 @@ float sampleToVoltage(uint16_t input) {
     float rail = 3.3;
     return rail*value/precision;
 }
-
+//23 + 
 spi_inst_t* spi;
 i2c_inst_t* i2c;
 
@@ -32,13 +33,18 @@ int main() {
     gains = initGains();
     fb = initFeedbacks();
 
+    //some debug gpios
+    gpio_init(UTIL1);
+    gpio_set_dir(UTIL1, GPIO_OUT);
+    gpio_put(UTIL1, 1);
+    
     // Initialize chosen serial port
     stdio_init_all();
 
     // init peripherals
     spi = spi0;
     i2c = i2c0;
-    spi_init(spi, 10*1000 * 1000);  //10Mhz
+    spi_init(spi, 20*1000 * 1000);  //20Mhz
     i2c_init(i2c, 400 * 1000);      //400khz
     ad7685_init(spi);
     dac8411_init(spi);
@@ -55,10 +61,12 @@ int main() {
         // printf("%f\n", sfint_to_float(inputs[2]));
         output = filter(inputs+2, fb, coeffs, gains);
         // output = inputs[2];
+        gpio_put(UTIL1, 0);
         dac8411_write(spi, DAC8411_POWER_NORMAL, output);
+        gpio_put(UTIL1, 1);
         // sleep_ms(1);
     }
     deinitGains(gains);
     deinitFeedbacks(fb);
     deinitCoefficients(coeffs);
-}
+}//7.3 + 11.34 + 4.3

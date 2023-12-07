@@ -36,7 +36,7 @@ repeating_timer_t timer;
 void core1_entry() {
 
     while(1) {
-        sleep_ms(100);
+        // sleep_ms(100);
         updateGains(i2c, gains);
         // printGains(gains);
     }
@@ -95,13 +95,13 @@ int main() {
 
 
     // negative timeout means exact delay (rather than delay between callbacks)
-    if (!add_repeating_timer_us(-SYS_PERIOD_US, timer_callback, NULL, &timer)) {
-        printf("Failed to add timer\n");
-        return 1;
-    }
+    // if (!add_repeating_timer_us(-SYS_PERIOD_US, timer_callback, NULL, &timer)) {
+    //     printf("Failed to add timer\n");
+    //     return 1;
+    // }
 
     while(1) {
-        sleep_ms(1000);
+        sleep_ms(100);
         // updateGains(i2c, gains);
         printGains(gains);
     }

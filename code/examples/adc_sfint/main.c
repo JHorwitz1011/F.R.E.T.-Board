@@ -26,7 +26,7 @@ int main() {
     stdio_init_all();
 
     // Initialize SPI port at 1 MHz
-    spi_init(spi, 10*1000 * 1000);
+    spi_init(spi, 15*1000 * 1000);
     ad7685_init(spi);
 
     // Loop forever

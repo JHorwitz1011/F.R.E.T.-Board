@@ -87,10 +87,7 @@ typedef struct Feedbacks{
 #define DEFAULT_MID1_GAIN 1.0f
 #define DEFAULT_MID2_GAIN 1.0f
 #define DEFAULT_MID3_GAIN 1.0f
-#define DEFAULT_HIGH_GAIN 1.0f
-
-#define UPPER_AMP 1.0f
-#define LOWER_AMP .0001f
+#define DEFAULT_HIGH_GAIN 0.00001f
 
 typedef struct Gains {
     sfint l;

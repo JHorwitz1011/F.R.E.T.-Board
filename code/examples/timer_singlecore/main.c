@@ -8,8 +8,6 @@
 #include "dac8411.h"
 #include "ads7830.h"
 #include "pins.h"
-#include "pico/multicore.h"
-
 
 #define SYS_FS 44100
 #define SYS_PERIOD_US 1000000/SYS_FS
@@ -31,16 +29,6 @@ Feedbacks* fb;
 sfint inputs[3];
 sfint output;
 repeating_timer_t timer;
-
-
-void core1_entry() {
-
-    while(1) {
-        sleep_ms(100);
-        updateGains(i2c, gains);
-        // printGains(gains);
-    }
-}
 
 bool timer_callback(repeating_timer_t *rt);
 
@@ -90,9 +78,6 @@ int main() {
     inputs[2] = 0;
     output = 0;
 
-    //i2c on the second core
-    multicore_launch_core1(core1_entry);
-
 
     // negative timeout means exact delay (rather than delay between callbacks)
     if (!add_repeating_timer_us(-SYS_PERIOD_US, timer_callback, NULL, &timer)) {
@@ -101,9 +86,7 @@ int main() {
     }
 
     while(1) {
-        sleep_ms(1000);
-        // updateGains(i2c, gains);
-        printGains(gains);
+        sleep_ms(10000);
     }
     cancel_repeating_timer(&timer);
     deinitGains(gains);
